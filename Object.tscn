@@ -1,0 +1,55 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://Object.gd" type="Script" id=1]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 7.14869, 7.60357 )
+
+[sub_resource type="CircleShape2D" id=2]
+radius = 12.8
+
+[sub_resource type="StyleBoxFlat" id=5]
+bg_color = Color( 0.380392, 0.803922, 0.0627451, 1 )
+
+[sub_resource type="StyleBoxFlat" id=4]
+
+[node name="Object" type="StaticBody2D"]
+collision_layer = 2
+collision_mask = 4
+script = ExtResource( 1 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+light_mask = 8
+position = Vector2( 7.14869, 7.60357 )
+shape = SubResource( 1 )
+
+[node name="ColorRect" type="ColorRect" parent="."]
+margin_right = 32.0
+margin_bottom = 32.0
+rect_scale = Vector2( 0.5, 0.5 )
+color = Color( 0.470588, 0.509804, 0.835294, 1 )
+
+[node name="Area2D" type="Area2D" parent="."]
+position = Vector2( 7.15, 7.6 )
+scale = Vector2( 1.25, 1.25 )
+collision_layer = 2
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource( 2 )
+
+[node name="ProgressBar" type="ProgressBar" parent="."]
+margin_left = -3.0
+margin_top = -8.0
+margin_right = 42.0
+margin_bottom = 6.0
+rect_scale = Vector2( 0.5, 0.25 )
+custom_styles/fg = SubResource( 5 )
+custom_styles/bg = SubResource( 4 )
+max_value = 5.0
+step = 1.0
+percent_visible = false
+
+[connection signal="mouse_entered" from="." to="." method="_on_Object_mouse_entered"]
+[connection signal="body_entered" from="Area2D" to="." method="_on_Area2D_body_entered"]
+[connection signal="body_exited" from="Area2D" to="." method="_on_Area2D_body_exited"]
