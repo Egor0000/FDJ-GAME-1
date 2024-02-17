@@ -24,3 +24,6 @@ func reload_level():
 func _input(event):
 	if event.is_action_pressed("ui_accept"):
 		reload_level()
+		
+
+
