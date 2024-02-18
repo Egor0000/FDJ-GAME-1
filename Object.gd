@@ -9,22 +9,23 @@ signal destroy_object(obj)
 
 
 
-func _ready() -> void:
+func _ready():
+	add_to_group("objects")
+
 	$ProgressBar.max_value = MAX_HEALTH
 	$ProgressBar.value = MAX_HEALTH
+
 
 func _on_Object_mouse_entered():
 	print("mouse entered")
 
 func _on_Area2D_body_entered(body):
-	print("body entered", body)
 	entered = true
 	pass # Replace with function body.
 
 
 func _on_Area2D_body_exited(body):
 	entered = false
-	print("body exited")
 	
 
 func _input(event):

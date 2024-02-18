@@ -1,0 +1,18 @@
+[gd_scene load_steps=5 format=3 uid="uid://kno4saakh3ej"]
+
+[ext_resource type="Texture2D" uid="uid://padmrjfe56tr" path="res://RandomLevelGenTileset.png" id="1"]
+[ext_resource type="Script" path="res://World.gd" id="2"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_g35kq"]
+texture = ExtResource("1")
+
+[sub_resource type="TileSet" id="1"]
+sources/0 = SubResource("TileSetAtlasSource_g35kq")
+
+[node name="World" type="Node"]
+script = ExtResource("2")
+
+[node name="TileMap" type="TileMap" parent="."]
+position = Vector2(-1, 0)
+tile_set = SubResource("1")
+format = 2
