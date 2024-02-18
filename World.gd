@@ -7,6 +7,7 @@ const Obj = preload("res://Object.tscn")
 var borders = Rect2(1, 1, 38, 21)
 var player
 
+
 @onready var tileMap = $TileMap
 
 func _ready():
@@ -41,7 +42,8 @@ func generate_level():
 			add_child(room_obj)			
 			room_obj.connect("destroy_object", Callable(self, "destroy_room_obj"))
 	
-	player.set_total_objects(get_tree().get_nodes_in_group("objects"))
+	player.set_total_objects(get_tree().get_nodes_in_group("objects").size())
+	player.set_current_objects(get_tree().get_nodes_in_group("objects").size())
 	
 	walker.queue_free()
 	for location in map:
@@ -53,6 +55,9 @@ func reload_level():
 
 func destroy_room_obj(obj):
 	obj.queue_free()
+	obj.remove_from_group("objects")
+	player.set_current_objects(get_tree().get_nodes_in_group("objects").size())
+
 
 
 func _input(event):

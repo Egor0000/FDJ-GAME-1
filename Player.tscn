@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://0xfaygfuljv5"]
+[gd_scene load_steps=5 format=3 uid="uid://0xfaygfuljv5"]
 
 [ext_resource type="Texture2D" uid="uid://bm87crmmn0r2f" path="res://icon.png" id="1"]
 [ext_resource type="Script" path="res://Player.gd" id="2"]
+[ext_resource type="Script" path="res://Goal.gd" id="3_numlw"]
 
 [sub_resource type="CircleShape2D" id="1"]
 radius = 15.0
@@ -25,6 +26,7 @@ offset_top = -80.0
 offset_right = -37.0
 offset_bottom = -66.0
 scale = Vector2(0.502337, 0.474403)
-text = "Objects remained: "
+text = "Objects remained: {current}/{total}"
+script = ExtResource("3_numlw")
 
 [node name="Camera2D" type="Camera2D" parent="."]

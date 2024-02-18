@@ -4,3 +4,7 @@ res://Player.tscn
 res://World.gd
 res://Player.gd
 res://Object.tscn
+res://Goal.gd
+res://ExitDoor.gd
+res://EventBus.gd
+res://ExitDoor.tscn
