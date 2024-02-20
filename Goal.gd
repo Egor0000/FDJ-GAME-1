@@ -13,6 +13,7 @@ func _process(delta):
 
 func display_goal(current, total):
 	text = scoreText.format({"current": str(total - current), "total" : str(total)})
+
 	if (total - current == total):
-		print("EEEEE", current, total)
+		print("GOAL, ACHIVED")
 		EventBus.goal_achived.emit()

@@ -35,6 +35,7 @@ func _input(event):
 			health -=1
 			update_health_bar(health)
 			if (health <=0):
+				EventBus.changed_xp.emit(10)
 				emit_signal("destroy_object", self)
 
 

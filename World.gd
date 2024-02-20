@@ -4,27 +4,36 @@ const Player = preload("res://Player.tscn")
 const Exit = preload("res://ExitDoor.tscn")
 const Obj = preload("res://Object.tscn")
 
+
 var borders = Rect2(1, 1, 38, 21)
 var player
+var exit 
 
+var level = 1
 
 @onready var tileMap = $TileMap
 
 func _ready():
+	get_node("Player").queue_free()
+	get_node("Object").queue_free()
+	
 	randomize()
-	generate_level()
-
-func generate_level():
-	var walker = Walker.new(Vector2(19, 11), borders)
-	var map = walker.walk(200)
 	
 	player = Player.instantiate()
 	add_child(player)
+
+	generate_level()
+
+func generate_level():
+
+	EventBus.room_level_changed.emit(level)
+	
+	var walker = Walker.new(Vector2(19, 11), borders)
+	var map = walker.walk(200)
+	
 	player.position = map.front()*32
 	
-	print("Player pos", player.position)
-	
-	var exit = Exit.instantiate()
+	exit = Exit.instantiate()
 	add_child(exit)
 	exit.position = walker.get_end_room().position*32
 	exit.connect("leaving_level", Callable(self, "reload_level"))
@@ -51,19 +60,32 @@ func generate_level():
 	#tileMap.set_cells_terrain_connect(0, borders)
 
 func reload_level():
-	get_tree().reload_current_scene()
+	level+=1
+	
+	if (get_node("ExitDoor") != null):
+		get_node("ExitDoor").queue_free()
+	
+	exit.queue_free()
+
+	for nodes in get_tree().get_nodes_in_group("objects"):
+		nodes.call_deferred("remove_from_group", "objects")
+		
+	player.set_current_objects(get_tree().get_nodes_in_group("objects").size())
+		
+	self.call_deferred("generate_level")
+	#get_tree().reload_current_scene()
 
 func destroy_room_obj(obj):
 	obj.queue_free()
 	obj.remove_from_group("objects")
 	player.set_current_objects(get_tree().get_nodes_in_group("objects").size())
 
-
-
 func _input(event):
-
-	if event.is_action_pressed("ui_accept"):
-		reload_level()
+	if event is InputEventKey:
+		if event.pressed and event.keycode == KEY_ESCAPE:
+			for nodes in get_tree().get_nodes_in_group("objects"):
+				destroy_room_obj(nodes)
+	pass
 		
 
 

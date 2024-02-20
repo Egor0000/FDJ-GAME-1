@@ -1,10 +1,5 @@
 res://default_env.tres
 res://World.tscn
-res://Player.tscn
-res://World.gd
-res://Player.gd
-res://Object.tscn
-res://Goal.gd
-res://ExitDoor.gd
+res://LevelLabel.gd
+res://PlayerHealthBar.gd
 res://EventBus.gd
-res://ExitDoor.tscn

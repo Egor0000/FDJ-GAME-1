@@ -1,3 +1,7 @@
+Label
+ProgressBar
+CanvasLayer
+StaticBody2D
 Camera2D
 CharacterBody2D
 TileMap

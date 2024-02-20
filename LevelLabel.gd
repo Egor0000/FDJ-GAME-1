@@ -1,19 +1,17 @@
-extends Node
+extends Label
 
-signal goal_achived
-signal room_level_changed(room)
-
-signal change_hp(health)
-signal changed_xp(xp)
-signal changed_xp_level
-
-signal no_hp
+const levelText = "lvl: {lvl}"
+var lvl = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	EventBus.connect("changed_xp_level", change_level)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	pass
+
+func change_level():
+	lvl+=1
+	text = levelText.format({"lvl": str(lvl)})
