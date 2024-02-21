@@ -13,6 +13,13 @@ var total_objects
 var current_objects
 
 func _ready():
+	EventBus.connect("no_hp", on_no_hp)
+	pass
+	
+func _input(event):
+	if event is InputEventKey:
+		if event.pressed and event.keycode == 75:
+			change_health(-50)
 	pass
 
 
@@ -33,10 +40,15 @@ func set_current_objects(current_objects):
 	
 
 func change_health(health):
-	EventBus.change_health.emit(health)
+	EventBus.changed_hp.emit(health)
 
 func change_xp(xp):
 	EventBus.change_health.emit(xp)
 	
 func change_level(level):
 	EventBus.change_health.emit(level)
+	
+	
+func on_no_hp():
+	print("KILLED")
+	EventBus.player_died.emit()

@@ -11,9 +11,12 @@ signal destroy_object(obj)
 
 func _ready():
 	add_to_group("objects")
-
 	$ProgressBar.max_value = MAX_HEALTH
 	$ProgressBar.value = MAX_HEALTH
+
+func _exit_tree():
+	pass
+	#self.remove_from_group("objects")
 
 
 func _on_Object_mouse_entered():
@@ -29,6 +32,7 @@ func _on_Area2D_body_exited(body):
 	
 
 func _input(event):
+	
 	if event is InputEventKey:
 		if event.is_action_pressed("ui_space") && entered:
 #			
@@ -36,6 +40,7 @@ func _input(event):
 			update_health_bar(health)
 			if (health <=0):
 				EventBus.changed_xp.emit(10)
+
 				emit_signal("destroy_object", self)
 
 

@@ -5,7 +5,6 @@ signal leaving_level
 var exit_enabled = false
 
 func _ready():
-	print("LLLLLLLLLLLLLLLLLLLLLLLLLLL", exit_enabled)
 	EventBus.connect("goal_achived", enable_exit)
 
 func _on_ExitDoor_body_entered(body):

@@ -12,5 +12,5 @@ func _process(delta):
 	pass
 
 func display_room(room):
-	print("HEHHEH", room)
+	print("Room", room)
 	text = roomText.format({"room": str(room)})

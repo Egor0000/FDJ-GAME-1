@@ -7,6 +7,7 @@ var hp = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	self.hp = MAX_HP
 	EventBus.connect("changed_hp", change_hp)
 
 
@@ -14,9 +15,10 @@ func _ready():
 func _process(delta):
 	pass
 	
-	
+
+# using also negative values
 func change_hp(hp):
-	self.hp = hp
+	self.hp = self.hp + hp
 	
 	value = self.hp
 	

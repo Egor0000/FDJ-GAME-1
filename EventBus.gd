@@ -3,11 +3,12 @@ extends Node
 signal goal_achived
 signal room_level_changed(room)
 
-signal change_hp(health)
+signal changed_hp(health)
 signal changed_xp(xp)
 signal changed_xp_level
 
 signal no_hp
+signal player_died
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

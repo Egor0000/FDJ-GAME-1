@@ -13,7 +13,7 @@ func _ready():
 func _process(delta):
 	pass
 	
-	
+# TODO move to player function, on to the XP compon
 func change_xp(xp):
 	var oldXp = self.xp;
 	var newXp = self.xp + xp

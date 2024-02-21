@@ -1,5 +1,16 @@
 res://default_env.tres
 res://World.tscn
 res://LevelLabel.gd
-res://PlayerHealthBar.gd
+res://HealthBar.gd
+res://Player.tscn
+res://Object.tscn
+res://ExitDoor.tscn
+res://PlayerXp.gd
+res://Player.gd
 res://EventBus.gd
+res://PlayerHealthBar.gd
+res://World.gd
+res://Goal.gd
+res://Object.gd
+res://ExitDoor.gd
+res://RoomLabel.gd
