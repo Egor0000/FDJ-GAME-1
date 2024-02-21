@@ -14,6 +14,7 @@ var level = 1
 @onready var tileMap = $TileMap
 
 func _ready():
+	randomize()
 	EventBus.connect("player_died", on_player_died)
 	
 	get_node("Player").queue_free()
@@ -85,6 +86,20 @@ func destroy_room_obj(obj):
 	obj.queue_free()
 	obj.remove_from_group("objects")
 	player.set_current_objects(get_tree().get_nodes_in_group("objects").size())
+	
+	var random = randi() % 2
+	if (random == 1):
+			#Called to change to new Sceen
+		var TheRoot = get_node("/root")  #need this as get_node will stop work once you remove your self from the Tree
+		var ThisScene = get_node("/root/World")
+		GlobalGameData.PreviousScene = ThisScene  #variable in Autoload script
+		#print(ThisScene)
+		#ThisScene.print_tree()
+		TheRoot.remove_child(ThisScene)
+		
+		var NextScene = load("res://Battle.tscn")
+		NextScene = NextScene.instantiate()
+		TheRoot.add_child(NextScene)
 
 func _input(event):
 	if event is InputEventKey:

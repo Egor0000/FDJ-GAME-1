@@ -14,3 +14,6 @@ res://Goal.gd
 res://Object.gd
 res://ExitDoor.gd
 res://RoomLabel.gd
+res://Battle.tscn
+res://Battle.gd
+res://global_game_data.gd

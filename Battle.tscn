@@ -1,0 +1,47 @@
+[gd_scene load_steps=6 format=3 uid="uid://ck06sk3fjk2hv"]
+
+[ext_resource type="Script" path="res://Battle.gd" id="1_dx32s"]
+[ext_resource type="Texture2D" uid="uid://rbr8udwi1ij6" path="res://sprites/battle_dungeon.png" id="1_pef2u"]
+[ext_resource type="Texture2D" uid="uid://bcfkeajkfjcl5" path="res://sprites/ghost.png" id="2_x5ky4"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mht4n"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lv4v0"]
+bg_color = Color(0.980392, 0.341176, 0.45098, 1)
+
+[node name="Battle" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_dx32s")
+
+[node name="Background" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 914.0
+offset_bottom = 800.0
+scale = Vector2(0.35, 0.35)
+texture = ExtResource("1_pef2u")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 96.0
+offset_top = 56.0
+offset_right = 706.0
+offset_bottom = 555.0
+scale = Vector2(0.2, 0.2)
+
+[node name="ProgressBar" type="ProgressBar" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_mht4n")
+theme_override_styles/fill = SubResource("StyleBoxFlat_lv4v0")
+step = 1.0
+value = 50.0
+
+[node name="Enemy" type="TextureRect" parent="VBoxContainer"]
+layout_mode = 2
+texture = ExtResource("2_x5ky4")
+expand_mode = 2
+stretch_mode = 2

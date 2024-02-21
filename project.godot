@@ -18,6 +18,7 @@ config/icon="res://icon.png"
 [autoload]
 
 EventBus="*res://EventBus.gd"
+GlobalGameData="*res://global_game_data.gd"
 
 [display]
 
@@ -25,6 +26,7 @@ window/size/viewport_width=320
 window/size/viewport_height=180
 window/size/window_width_override=1280
 window/size/window_height_override=720
+window/stretch/mode="canvas_items"
 
 [gui]
 
