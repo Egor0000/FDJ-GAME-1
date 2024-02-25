@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://0xfaygfuljv5"]
+[gd_scene load_steps=8 format=3 uid="uid://0xfaygfuljv5"]
 
 [ext_resource type="Texture2D" uid="uid://bm87crmmn0r2f" path="res://icon.png" id="1"]
 [ext_resource type="Script" path="res://Player.gd" id="2"]
@@ -6,6 +6,42 @@
 
 [sub_resource type="CircleShape2D" id="1"]
 radius = 15.0
+
+[sub_resource type="Animation" id="Animation_aigwi"]
+resource_name = "player_died"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.1, 0.4, 0.7, 1),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_34ji5"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_10pmx"]
+_data = {
+"RESET": SubResource("Animation_34ji5"),
+"player_died": SubResource("Animation_aigwi")
+}
 
 [node name="Player" type="CharacterBody2D"]
 collision_layer = 4
@@ -30,3 +66,9 @@ text = "Objects remained: {current}/{total}"
 script = ExtResource("3_numlw")
 
 [node name="Camera2D" type="Camera2D" parent="."]
+modulate = Color(0, 0, 0, 1)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_10pmx")
+}

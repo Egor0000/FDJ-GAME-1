@@ -85,6 +85,7 @@ func reload_level():
 func destroy_room_obj(obj):
 	obj.queue_free()
 	obj.remove_from_group("objects")
+	print(get_tree())
 	player.set_current_objects(get_tree().get_nodes_in_group("objects").size())
 	
 	var random = randi() % 2
@@ -110,5 +111,6 @@ func _input(event):
 		
 
 func on_player_died():
+	print("DIED")
 	get_tree().reload_current_scene()
 

@@ -1,13 +1,90 @@
-[gd_scene load_steps=6 format=3 uid="uid://ck06sk3fjk2hv"]
+[gd_scene load_steps=17 format=3 uid="uid://ck06sk3fjk2hv"]
 
 [ext_resource type="Script" path="res://Battle.gd" id="1_dx32s"]
 [ext_resource type="Texture2D" uid="uid://rbr8udwi1ij6" path="res://sprites/battle_dungeon.png" id="1_pef2u"]
 [ext_resource type="Texture2D" uid="uid://bcfkeajkfjcl5" path="res://sprites/ghost.png" id="2_x5ky4"]
+[ext_resource type="Script" path="res://Enemy.gd" id="3_xjpuc"]
+[ext_resource type="Texture2D" uid="uid://ba84cco2866y6" path="res://sprites/attack.png" id="5_12g33"]
+[ext_resource type="Texture2D" uid="uid://bjdbnctoqapwn" path="res://sprites/defence.png" id="6_ngmp5"]
+[ext_resource type="Script" path="res://ActionList.gd" id="7_1nkli"]
+[ext_resource type="PackedScene" uid="uid://3nybs5x8osjp" path="res://BattleAction.tscn" id="7_eyk65"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mht4n"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_grgvf"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lv4v0"]
-bg_color = Color(0.980392, 0.341176, 0.45098, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6vwmx"]
+bg_color = Color(0.992157, 0.329412, 0.45098, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ihk0i"]
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hmybs"]
+bg_color = Color(0.227451, 1, 0.364706, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.486275, 0.486275, 0.486275, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+corner_detail = 10
+
+[sub_resource type="Animation" id="Animation_lvghk"]
+resource_name = "enemy_dies"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Enemy/MarginContainer/EnemySprite:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.6, 0.9),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_hpfsa"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Enemy/MarginContainer/EnemySprite:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_67yoi"]
+resource_name = "enemy_hit"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Enemy/MarginContainer/EnemySprite:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.4),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 0.32549, 0.0823529, 0.729412), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_dkats"]
+_data = {
+"RESET": SubResource("Animation_hpfsa"),
+"enemy_dies": SubResource("Animation_lvghk"),
+"enemy_hit": SubResource("Animation_67yoi")
+}
 
 [node name="Battle" type="Control"]
 layout_mode = 3
@@ -25,23 +102,177 @@ offset_bottom = 800.0
 scale = Vector2(0.35, 0.35)
 texture = ExtResource("1_pef2u")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
-layout_mode = 0
-offset_left = 96.0
-offset_top = 56.0
-offset_right = 706.0
-offset_bottom = 555.0
+[node name="Enemy" type="AspectRatioContainer" parent="."]
+layout_mode = 1
+offset_left = 80.0
+offset_top = 48.0
+offset_right = 690.0
+offset_bottom = 547.0
 scale = Vector2(0.2, 0.2)
+script = ExtResource("3_xjpuc")
 
-[node name="ProgressBar" type="ProgressBar" parent="VBoxContainer"]
+[node name="VBoxContainer" type="MarginContainer" parent="Enemy"]
 layout_mode = 2
-theme_override_styles/background = SubResource("StyleBoxFlat_mht4n")
-theme_override_styles/fill = SubResource("StyleBoxFlat_lv4v0")
+
+[node name="HealthBar" type="ProgressBar" parent="Enemy/VBoxContainer"]
+layout_mode = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_grgvf")
+theme_override_styles/fill = SubResource("StyleBoxFlat_6vwmx")
 step = 1.0
 value = 50.0
 
-[node name="Enemy" type="TextureRect" parent="VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="Enemy"]
+layout_mode = 2
+theme_override_constants/margin_top = 20
+
+[node name="EnemySprite" type="TextureRect" parent="Enemy/MarginContainer"]
 layout_mode = 2
 texture = ExtResource("2_x5ky4")
 expand_mode = 2
 stretch_mode = 2
+
+[node name="Timer" type="Timer" parent="Enemy"]
+
+[node name="PlayerPanel" type="Panel" parent="."]
+layout_mode = 0
+offset_top = 152.0
+offset_right = 320.0
+offset_bottom = 176.0
+
+[node name="PlayerHealthBarBattle" type="ProgressBar" parent="PlayerPanel"]
+layout_mode = 0
+offset_left = 184.0
+offset_top = 4.0
+offset_right = 312.0
+offset_bottom = 20.0
+theme_override_styles/background = SubResource("StyleBoxFlat_ihk0i")
+theme_override_styles/fill = SubResource("StyleBoxFlat_hmybs")
+step = 1.0
+value = 50.0
+show_percentage = false
+
+[node name="PlayerStatsPanel" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 272.0
+offset_top = 8.0
+offset_right = 312.0
+offset_bottom = 64.0
+
+[node name="PlayerStatLabel" type="Label" parent="PlayerStatsPanel"]
+layout_mode = 1
+offset_right = 40.0
+offset_bottom = 16.0
+theme_override_font_sizes/font_size = 10
+text = "Player"
+
+[node name="Attack" type="TextureRect" parent="PlayerStatsPanel"]
+layout_mode = 0
+offset_top = 16.0
+offset_right = 200.0
+offset_bottom = 204.0
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("5_12g33")
+
+[node name="Defence" type="TextureRect" parent="PlayerStatsPanel"]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 36.0
+offset_right = 190.0
+offset_bottom = 224.0
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("6_ngmp5")
+
+[node name="DefenceLabel" type="Label" parent="PlayerStatsPanel"]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 40.0
+offset_right = 36.0
+offset_bottom = 54.0
+theme_override_font_sizes/font_size = 10
+text = "d"
+
+[node name="AtackLabel" type="Label" parent="PlayerStatsPanel"]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 20.0
+offset_right = 36.0
+offset_bottom = 34.0
+theme_override_font_sizes/font_size = 10
+text = "d"
+
+[node name="EnemyStatsPanel" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 48.0
+offset_bottom = 64.0
+
+[node name="PlayerStatLabel" type="Label" parent="EnemyStatsPanel"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 16.0
+theme_override_font_sizes/font_size = 10
+text = "Enemy"
+
+[node name="Attack" type="TextureRect" parent="EnemyStatsPanel"]
+layout_mode = 0
+offset_top = 16.0
+offset_right = 200.0
+offset_bottom = 204.0
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("5_12g33")
+
+[node name="Defence" type="TextureRect" parent="EnemyStatsPanel"]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 36.0
+offset_right = 190.0
+offset_bottom = 224.0
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("6_ngmp5")
+
+[node name="DefenceLabel" type="Label" parent="EnemyStatsPanel"]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 40.0
+offset_right = 36.0
+offset_bottom = 54.0
+theme_override_font_sizes/font_size = 10
+text = "d"
+
+[node name="AttackLabel" type="Label" parent="EnemyStatsPanel"]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 20.0
+offset_right = 36.0
+offset_bottom = 34.0
+theme_override_font_sizes/font_size = 10
+text = "d"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+offset_top = -24.0
+offset_right = 180.0
+grow_vertical = 0
+vertical_scroll_mode = 0
+
+[node name="ActionList" type="HBoxContainer" parent="ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+script = ExtResource("7_1nkli")
+
+[node name="BattleAction" parent="ScrollContainer/ActionList" instance=ExtResource("7_eyk65")]
+layout_mode = 2
+size_flags_vertical = 8
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_dkats")
+}
+
+[connection signal="timeout" from="Enemy/Timer" to="." method="_on_timer_timeout"]

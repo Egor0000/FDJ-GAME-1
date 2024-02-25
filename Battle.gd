@@ -1,8 +1,22 @@
 extends Control
 
+var playerTurn = true
+var battleScene = true;
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	EventBus.connect("changed_enemy_attack", on_enemy_attack_changed)
+	EventBus.connect("changed_enemy_defence", on_enemy_defence_changed)
+	EventBus.connect("changed_enemy_health", on_enemy_health_changed)
+	EventBus.connect("enemy_dies", on_enemy_dies)
+	EventBus.connect("enemy_hit", on_enemy_hit)
+	EventBus.connect("changed_turn", on_turn_changed)
+	EventBus.connect("changed_player_stats", on_player_stats_changed)
+	EventBus.connect("changed_battle_scene", on_battle_scene_changed)
+	
+	set_enemy_panel()
+	
+	EventBus.changed_battle_scene.emit(true)
 	pass # Replace with function body.
 
 
@@ -13,11 +27,70 @@ func _process(delta):
 func _input(event):
 	if event is InputEventKey:
 		if event.keycode == 75:
-			var TheRoot = get_node("/root")  #need this as get_node will stop work once you remove your self from the Tree
-			var ThisScene = get_node("/root/Battle")
+			close_battle_scene()
 
-			TheRoot.remove_child(ThisScene)
-			ThisScene.call_deferred("free")
+func on_enemy_dies():
+	$AnimationPlayer.play("enemy_dies")
+	await $AnimationPlayer.animation_finished
+	close_battle_scene()
+
+func on_enemy_hit():
+	$AnimationPlayer.play("enemy_hit")
+	await $AnimationPlayer.animation_finished
+	
+func on_turn_changed():
+	playerTurn = !playerTurn
+	var action_buttons = get_tree().get_nodes_in_group("action_buttons")
+	for button in action_buttons:
+		if (playerTurn):
+			button.set_disabled(false)
+		else:
+			button.set_disabled(true)
+			$Enemy.action()
 			
-			var NextScene = GlobalGameData.PreviousScene
-			TheRoot.add_child(NextScene)
+			
+func on_player_stats_changed(args):
+	if args[0] == "health":
+		$PlayerPanel/PlayerHealthBarBattle.value = args[1]
+	elif args[0] == "attack":
+		$PlayerStatsPanel/AtackLabel.text = str(args[1])
+	else:
+		$PlayerStatsPanel/DefenceLabel.text = str(args[1])
+	pass
+
+func _on_timer_timeout():
+	close_battle_scene()
+	
+func on_battle_scene_changed(isBattleScene):
+	battleScene = isBattleScene
+	if (!isBattleScene):
+
+		close_battle_scene()
+
+func close_battle_scene():
+	print("dkjqwelkjdk")
+	var root = get_tree().get_root()
+	var current = root.get_child(root.get_child_count() - 1)
+	current.call_deferred("free")
+	var new_scene =  GlobalGameData.PreviousScene
+	get_tree().get_root().add_child(new_scene)
+	get_tree().set_current_scene(new_scene)
+	print("deddd", get_tree())
+	
+	if (battleScene):
+		EventBus.changed_battle_scene.emit(false)
+
+func on_enemy_attack_changed(deltaAttack):
+	var newAttack = $Enemy.change_attack(deltaAttack)
+	$EnemyStatsPanel/AttackLabel.text = str(newAttack)
+	
+func on_enemy_defence_changed(deltaDefence):
+	var newDefence = $Enemy.change_defence(deltaDefence)
+	$EnemyStatsPanel/DefenceLabel.text = str(newDefence)
+	
+func on_enemy_health_changed(deltaHealth):
+	$Enemy.change_health(deltaHealth)
+	
+func set_enemy_panel():
+	$EnemyStatsPanel/AttackLabel.text = str($Enemy.get_attack())
+	$EnemyStatsPanel/DefenceLabel.text = str($Enemy.get_defence())
