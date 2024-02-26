@@ -23,7 +23,9 @@ signal enemy_hit()
 # Player in Battle
 signal changed_player_attack_b(deltaAttack)
 signal changed_player_defence_b(deltaDefance)
-signal changed_player_health_b(deltaHealth)
+signal changed_player_health_b(attack) # signal triggered when enemy attacks player,
+signal player_attacks(attack) # signal triggered when player attack enemy
+signal player_actions(active_stats) # signal triggered when action button is pressed. Signal listened by player
 #signal player_dies()
 signal player_hit()
 

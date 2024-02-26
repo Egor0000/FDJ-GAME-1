@@ -23,13 +23,15 @@ var died = false
 
 func _ready():
 	EventBus.connect("no_hp", on_no_hp)
-	EventBus.connect("changed_player_health_b", on_player_health_b_changed)
+	#EventBus.connect("changed_player_health_b", on_player_health_b_changed)
+	EventBus.connect("changed_player_health_b", on_enemy_attack)
 	EventBus.connect("changed_player_attack_b", on_player_attack_b_changed)
 	EventBus.connect("changed_player_defence_b", on_player_defence_b_changed)
 	EventBus.connect("changed_battle_scene", on_battle_scene_changed)
 	EventBus.connect("player_hit", on_player_hit)
+	EventBus.connect("player_actions", on_player_actions)
 
-	
+
 func on_player_health_b_changed(deltaHp):
 	self.health_b += deltaHp
 	self.health = self.health_b
@@ -51,17 +53,18 @@ func on_battle_scene_changed(isBattleScene):
 		health_b = health
 		attack_b = attack
 		defence_b = defence
-		
+
 		EventBus.changed_player_stats.emit(["health", self.health_b])
 		EventBus.changed_player_stats.emit(["attack", self.attack_b])
 		EventBus.changed_player_stats.emit(["defence", self.defence_b])
 	else:
 		health = health_b
 		change_health(health)
-	
+
+
 func on_player_hit():
 	pass
-	
+
 func _input(event):
 	if event is InputEventKey:
 		if event.pressed and event.keycode == 75:
@@ -75,27 +78,54 @@ func _physics_process(delta):
 
 	set_velocity(Vector2(x_input, y_input)*100)
 	move_and_slide()
-	
-	
+
+
 func set_total_objects(total_objects):
 	self.total_objects = total_objects
 
 func set_current_objects(current_objects):
 	$Goal.display_goal(current_objects, total_objects)
-	self.current_objects = current_objects 
-	
+	self.current_objects = current_objects
+
 
 func change_health(health):
-	print("GEALTH ", health)	
 	EventBus.changed_hp.emit(health)
 
 func change_xp(xp):
 	EventBus.change_health.emit(xp)
-	
+
 func change_level(level):
 	EventBus.change_health.emit(level)
+
+# On enemy attacks 
+func on_enemy_attack(enemyAttack):
+	var dmgMultiplier =1 - float(get_defence()) / float(enemyAttack + get_defence())
+	var dmg = enemyAttack * dmgMultiplier
+	on_player_health_b_changed(-ceil(dmg))
+
+func get_defence():
+	return defence
+
+# stats mean modifers actioned by player
+# modifiers: damage, defence, attack, health, defence_enemy, attack_enemy
+# for each modifer, player changes players/enemies stats
+func on_player_actions(stats):
+	var modifiers = stats.keys()
 	
-	
+	for modifier in stats:
+		if modifier == "damage":
+			var attackMult = 1.0 + (float)(attack_b / 100.0)
+			print_debug("", attackMult)
+			EventBus.player_attacks.emit(attackMult*stats[modifier])
+		elif modifier == "defence":
+			defence_b += stats[modifier]
+			print_debug("", defence_b)
+			EventBus.changed_player_stats.emit(["defence", self.defence_b])
+		elif modifier == "attack":
+			attack_b += stats[modifier]
+			print_debug("", attack_b)
+			EventBus.changed_player_stats.emit(["attack", self.attack_b])
+
 func on_no_hp():
 	print("KILLED", battleScene)
 	# TODO VERY VERY VERY BAD !!!! Added as an workaround. SHould investigate why it is called twice and fix

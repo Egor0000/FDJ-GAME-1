@@ -1,15 +1,11 @@
 res://default_env.tres
 res://Player.tscn
 res://LevelLabel.gd
+res://Battle.gd
 res://World.tscn
 res://Object.tscn
 res://ExitDoor.tscn
 res://Battle.tscn
 res://BattleAction.tscn
-res://Enemy.gd
-res://Battle.gd
-res://EventBus.gd
-res://BattleAction.gd
-res://Player.gd
 res://PlayerHealthBar.gd
-res://World.gd
+res://BattleAction.gd

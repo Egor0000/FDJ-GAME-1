@@ -36,6 +36,11 @@ func change_health(deltaHealth) -> int:
 	
 	return self.health
 	
+func on_player_attack(playerAttack):
+	var dmgMultiplier = 1 - float(get_defence()) / float(playerAttack + get_defence())
+	var dmg = playerAttack * dmgMultiplier
+	change_health(-ceil(dmg))
+	
 func get_attack() -> int:
 	return attack
 
@@ -43,5 +48,5 @@ func get_defence() -> int:
 	return defence
 	
 func action():
-	EventBus.changed_player_health_b.emit(-20)
+	EventBus.changed_player_health_b.emit(get_attack())
 	EventBus.changed_turn.emit()

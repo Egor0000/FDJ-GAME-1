@@ -18,7 +18,7 @@ func _process(delta):
 
 # using also negative values
 func change_hp(hp):
-	print("MDLNKMDNDN", hp)
+
 	self.hp = self.hp + hp
 	
 	value = self.hp

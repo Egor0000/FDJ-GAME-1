@@ -13,6 +13,7 @@ func _ready():
 	EventBus.connect("changed_turn", on_turn_changed)
 	EventBus.connect("changed_player_stats", on_player_stats_changed)
 	EventBus.connect("changed_battle_scene", on_battle_scene_changed)
+	EventBus.connect("player_attacks", on_player_attacks)
 	
 	set_enemy_panel()
 	
@@ -61,24 +62,18 @@ func on_player_stats_changed(args):
 func _on_timer_timeout():
 	close_battle_scene()
 	
+# isBattleScene - value to be set to battle scene: false - battle scene down, true - battle scene up
 func on_battle_scene_changed(isBattleScene):
-	battleScene = isBattleScene
 	if (!isBattleScene):
-
 		close_battle_scene()
 
 func close_battle_scene():
-	print("dkjqwelkjdk")
 	var root = get_tree().get_root()
 	var current = root.get_child(root.get_child_count() - 1)
 	current.call_deferred("free")
 	var new_scene =  GlobalGameData.PreviousScene
 	get_tree().get_root().add_child(new_scene)
 	get_tree().set_current_scene(new_scene)
-	print("deddd", get_tree())
-	
-	if (battleScene):
-		EventBus.changed_battle_scene.emit(false)
 
 func on_enemy_attack_changed(deltaAttack):
 	var newAttack = $Enemy.change_attack(deltaAttack)
@@ -90,6 +85,9 @@ func on_enemy_defence_changed(deltaDefence):
 	
 func on_enemy_health_changed(deltaHealth):
 	$Enemy.change_health(deltaHealth)
+	
+func on_player_attacks(attack):
+	$Enemy.on_player_attack(attack)
 	
 func set_enemy_panel():
 	$EnemyStatsPanel/AttackLabel.text = str($Enemy.get_attack())
