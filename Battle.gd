@@ -44,6 +44,7 @@ func on_turn_changed():
 	var action_buttons = get_tree().get_nodes_in_group("action_buttons")
 	for button in action_buttons:
 		if (playerTurn):
+			$ScrollContainer/ActionList.reload_actions()
 			button.set_disabled(false)
 		else:
 			button.set_disabled(true)

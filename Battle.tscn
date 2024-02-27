@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://ck06sk3fjk2hv"]
+[gd_scene load_steps=16 format=3 uid="uid://ck06sk3fjk2hv"]
 
 [ext_resource type="Script" path="res://Battle.gd" id="1_dx32s"]
 [ext_resource type="Texture2D" uid="uid://rbr8udwi1ij6" path="res://sprites/battle_dungeon.png" id="1_pef2u"]
@@ -7,7 +7,6 @@
 [ext_resource type="Texture2D" uid="uid://ba84cco2866y6" path="res://sprites/attack.png" id="5_12g33"]
 [ext_resource type="Texture2D" uid="uid://bjdbnctoqapwn" path="res://sprites/defence.png" id="6_ngmp5"]
 [ext_resource type="Script" path="res://ActionList.gd" id="7_1nkli"]
-[ext_resource type="PackedScene" uid="uid://3nybs5x8osjp" path="res://BattleAction.tscn" id="7_eyk65"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_grgvf"]
 
@@ -265,10 +264,6 @@ vertical_scroll_mode = 0
 layout_mode = 2
 size_flags_horizontal = 8
 script = ExtResource("7_1nkli")
-
-[node name="BattleAction" parent="ScrollContainer/ActionList" instance=ExtResource("7_eyk65")]
-layout_mode = 2
-size_flags_vertical = 8
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
