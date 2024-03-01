@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://kno4saakh3ej"]
+[gd_scene load_steps=15 format=3 uid="uid://kno4saakh3ej"]
 
 [ext_resource type="Script" path="res://World.gd" id="2"]
 [ext_resource type="Texture2D" uid="uid://dkie5ew656217" path="res://PathAndObjects.png" id="2_ibh4w"]
@@ -8,6 +8,7 @@
 [ext_resource type="Script" path="res://PlayerXp.gd" id="5_f32i4"]
 [ext_resource type="Script" path="res://PlayerHealthBar.gd" id="5_lwh1j"]
 [ext_resource type="Script" path="res://RoomLabel.gd" id="5_v6h6l"]
+[ext_resource type="Script" path="res://LevelUpCanvas.gd" id="9_tsdjk"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_d1g5d"]
 texture = ExtResource("2_ibh4w")
@@ -866,5 +867,57 @@ offset_bottom = 47.0
 theme_override_font_sizes/font_size = 8
 text = "Room: 1"
 script = ExtResource("5_v6h6l")
+
+[node name="LevelUpCanvas" type="CanvasLayer" parent="."]
+script = ExtResource("9_tsdjk")
+
+[node name="Panel" type="Panel" parent="LevelUpCanvas"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -40.0
+offset_top = -34.0
+offset_right = 60.0
+offset_bottom = 41.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="LevelUpCanvas/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.443137, 0.0431373, 0.0627451, 1)
+
+[node name="Label" type="Label" parent="LevelUpCanvas/Panel"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+theme_override_font_sizes/font_size = 10
+text = "Level Up !!!"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="LevelUpCanvas/Panel"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -11.5
+offset_right = 124.0
+offset_bottom = 11.5
+grow_vertical = 2
+
+[node name="InfoLabel" type="Label" parent="LevelUpCanvas/Panel/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 10
+text = "CCccccccccccccc"
+autowrap_mode = 3
+
+[node name="Timer" type="Timer" parent="LevelUpCanvas"]
+
+[connection signal="timeout" from="LevelUpCanvas/Timer" to="LevelUpCanvas" method="_on_timer_timeout"]
 
 [editable path="Object"]

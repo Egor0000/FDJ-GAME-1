@@ -91,6 +91,9 @@ var all_actions = [
 	}
 ]
 
+var unlocked_actions=[1, 2, 3]
+var unlock_probabilities = [[0, 8], [8, 31], [31, 61], [61, 101]]
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	pass # Replace with function body.

@@ -2,10 +2,11 @@ extends HBoxContainer
 
 const Action = preload("res://BattleAction.tscn")
 
-var unlocked_actions=[1, 2, 3]
+
 var sorted_by_level = {}
 var random_actions = []
 @export var probabilities = [[0, 8], [8, 31], [31, 61], [61, 101]]
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	# put probabilites as exported variable
@@ -28,15 +29,16 @@ func _process(delta):
 func build_random_action_list(probabilites):
 	var random_list = []
 	while (random_list.size() < 3):
-		var random_level = str(get_random_action(probabilites))
+		var random_level = str(get_random_level(probabilites))
 		if sorted_by_level.has(random_level) and sorted_by_level[random_level].size() > 0:
 			var rdx = randi() % sorted_by_level[random_level].size()
 			random_list.append(sorted_by_level[random_level][rdx])
 	
 	return random_list
 
+# TODO move to a separate component
 # probabilites will be an array[4] of probabilites for each of 4 levels: [(0, 8), (8, 31), (31, 61), (61, 101)]
-func get_random_action(probabilites):
+func get_random_level(probabilites):
 	var randm = randi() % 100 + 1
 
 	for rng_idx in range(probabilites.size()):
@@ -48,7 +50,7 @@ func get_random_action(probabilites):
 func get_sorted_by_level():
 	var sorted = {}
 	
-	for id in unlocked_actions:
+	for id in GlobalGameData.unlocked_actions:
 		var action = get_action_by_id(id)
 		if action != null:
 			var level = str(action["level"])

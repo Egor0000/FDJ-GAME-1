@@ -30,7 +30,7 @@ func _ready():
 	EventBus.connect("changed_battle_scene", on_battle_scene_changed)
 	EventBus.connect("player_hit", on_player_hit)
 	EventBus.connect("player_actions", on_player_actions)
-
+	EventBus.connect("changed_xp_level", on_level_up)
 
 func on_player_health_b_changed(deltaHp):
 	self.health_b += deltaHp
@@ -53,10 +53,13 @@ func on_battle_scene_changed(isBattleScene):
 		health_b = health
 		attack_b = attack
 		defence_b = defence
+		
+		print_debug("", self.health_b)
 
 		EventBus.changed_player_stats.emit(["health", self.health_b])
 		EventBus.changed_player_stats.emit(["attack", self.attack_b])
 		EventBus.changed_player_stats.emit(["defence", self.defence_b])
+		
 	else:
 		health = health_b
 		change_health(health)
@@ -138,3 +141,57 @@ func on_no_hp():
 	$AnimationPlayer.play("player_died")
 	await $AnimationPlayer.animation_finished
 	EventBus.player_died.emit()
+	
+func on_level_up():
+	EventBus.changed_hp.emit(MAX_HEALTH-self.health)
+	self.health = MAX_HEALTH
+	
+	var next_action =  get_new_unlocked()
+	GlobalGameData.unlocked_actions.append(next_action)
+	EventBus.print_level_up.emit("New action unlocked: " + get_action_by_id(next_action).name)
+	pass
+
+func get_new_unlocked()	-> int:
+	var next_action = -1
+	var sorted_by_level = get_sorted_by_level()
+	
+	while (next_action < 0):
+		var random_level = get_random_level(GlobalGameData.unlock_probabilities)
+		if sorted_by_level.has(str(random_level)) and sorted_by_level[str(random_level)].size() > 0:
+			var rdx = randi() % sorted_by_level[str(random_level)].size()
+
+			if (!GlobalGameData.unlocked_actions.has(sorted_by_level[str(random_level)][rdx])):
+				next_action = sorted_by_level[str(random_level)][rdx]
+	
+	return next_action
+
+
+#TODO move to a separate component
+# probabilites will be an array[4] of probabilites for each of 4 levels: [(0, 8), (8, 31), (31, 61), (61, 101)]
+func get_random_level(probabilites) -> int:
+	var randm = randi() % 100 + 1
+
+	for rng_idx in range(probabilites.size()):
+		if randm >= probabilites[rng_idx][0] and randm < probabilites[rng_idx][1]:
+			return probabilites.size() - rng_idx
+	return -1
+
+
+func get_sorted_by_level():
+	var sorted = {}
+	
+	for action in GlobalGameData.all_actions:
+		if action != null:
+			var level = str(action["level"])
+			if (sorted.has(level)):
+				sorted[level].append(action["id"])
+			else:
+				sorted[level] = [action["id"]]
+	
+	return sorted
+
+func get_action_by_id(id):
+	for action in GlobalGameData.all_actions:
+		if str(action["id"]) == str(id):
+			return action
+	return null

@@ -9,6 +9,7 @@ signal changed_battle_scene(isBattleScene) # used to detect battle scene switchi
 signal changed_hp(health)
 signal changed_xp(xp)
 signal changed_xp_level
+signal print_level_up(message)
 
 signal no_hp
 signal player_died
@@ -17,7 +18,7 @@ signal player_died
 signal changed_enemy_attack(deltaAttack)
 signal changed_enemy_defence(deltaDefance)
 signal changed_enemy_health(deltaHealth)
-signal enemy_dies()
+signal enemy_dies(reward)
 signal enemy_hit()
 
 # Player in Battle

@@ -7,7 +7,6 @@ var lvl = 0
 func _ready():
 	EventBus.connect("changed_xp_level", change_level)
 
-
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	pass

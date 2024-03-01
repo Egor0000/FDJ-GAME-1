@@ -3,6 +3,9 @@ extends Control
 var playerTurn = true
 var battleScene = true;
 
+# TODO workaround to avoid multiple closing of scenes
+var closed_scene = false;
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	EventBus.connect("changed_enemy_attack", on_enemy_attack_changed)
@@ -29,10 +32,14 @@ func _input(event):
 	if event is InputEventKey:
 		if event.keycode == 75:
 			close_battle_scene()
+		elif event.keycode == 78:
+			EventBus.player_attacks.emit(100000)
+			EventBus.changed_turn.emit()
 
-func on_enemy_dies():
+func on_enemy_dies(reward):
 	$AnimationPlayer.play("enemy_dies")
 	await $AnimationPlayer.animation_finished
+	take_reward(reward)
 	close_battle_scene()
 
 func on_enemy_hit():
@@ -48,7 +55,8 @@ func on_turn_changed():
 			button.set_disabled(false)
 		else:
 			button.set_disabled(true)
-			$Enemy.action()
+			#$Enemy.action()
+			$Enemy.get_action()
 			
 			
 func on_player_stats_changed(args):
@@ -69,11 +77,16 @@ func on_battle_scene_changed(isBattleScene):
 		close_battle_scene()
 
 func close_battle_scene():
+	if (closed_scene):
+		return
+	closed_scene = true
+	
 	var root = get_tree().get_root()
 	var current = root.get_child(root.get_child_count() - 1)
 	current.call_deferred("free")
-	var new_scene =  GlobalGameData.PreviousScene
+	var new_scene = GlobalGameData.PreviousScene
 	get_tree().get_root().add_child(new_scene)
+
 	get_tree().set_current_scene(new_scene)
 
 func on_enemy_attack_changed(deltaAttack):
@@ -93,3 +106,9 @@ func on_player_attacks(attack):
 func set_enemy_panel():
 	$EnemyStatsPanel/AttackLabel.text = str($Enemy.get_attack())
 	$EnemyStatsPanel/DefenceLabel.text = str($Enemy.get_defence())
+	
+func take_reward(reward):
+	for entry in reward:
+		if entry == "player_xp":
+			EventBus.changed_xp.emit(reward[entry])
+	pass
